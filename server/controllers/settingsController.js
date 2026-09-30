@@ -80,7 +80,12 @@ exports.updatePassword = asyncHandler(async (req, res) => {
 exports.uploadLogo = asyncHandler(async (req, res) => {
   if (!req.file) throw new AppError('Choose an image to upload', 400);
   removeUpload(req.user.logo);
-  req.user.logo = `/uploads/${req.file.filename}`;
+  if (req.file.buffer) {
+    const mime = req.file.mimetype || 'image/png';
+    req.user.logo = `data:${mime};base64,${req.file.buffer.toString('base64')}`;
+  } else {
+    req.user.logo = `/uploads/${req.file.filename}`;
+  }
   await req.user.save();
   res.json({ success: true, data: { user: req.user } });
 });

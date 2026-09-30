@@ -3,7 +3,7 @@ const multer = require('multer');
 const AppError = require('../utils/AppError');
 const { uploadsDir } = require('../utils/files');
 
-const storage = multer.diskStorage({
+const diskStorage = multer.diskStorage({
   destination(_req, _file, cb) {
     cb(null, uploadsDir());
   },
@@ -12,6 +12,8 @@ const storage = multer.diskStorage({
     cb(null, `${req.user._id}-${Date.now()}${ext}`);
   },
 });
+
+const storage = process.env.VERCEL ? multer.memoryStorage() : diskStorage;
 
 const upload = multer({
   storage,

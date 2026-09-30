@@ -125,6 +125,31 @@ The API serves `client/dist`. Use MongoDB Atlas or another hosted database, and 
 
 “Send invoice” records the status. It does not email the PDF or collect a payment.
 
+## Deploy on Vercel
+
+The React app is the static site. The Express API runs as a Vercel function in `api/[...path].js`. Vercel has no local disk and no in-memory MongoDB, so production needs MongoDB Atlas.
+
+1. In Atlas, create a free cluster and a database user. Allow network access from anywhere (`0.0.0.0/0`) so Vercel can connect.
+2. From the project root, install the CLI and deploy:
+
+```powershell
+npm install -g vercel
+vercel login
+vercel
+```
+
+3. In the Vercel project settings, set:
+
+| Variable | Value |
+| --- | --- |
+| `MONGO_URI` | Atlas connection string |
+| `JWT_SECRET` | A long random string |
+| `CLIENT_URL` | Your Vercel URL, such as `https://your-app.vercel.app` |
+
+`NODE_ENV` is `production` on Vercel. Do not set it to `development`.
+
+The first request to an empty database seeds the Kaavya Studio demo. Logo uploads on Vercel are stored in the database, because the function filesystem is temporary.
+
 ## Scripts
 
 | Script | Purpose |

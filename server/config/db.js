@@ -2,6 +2,10 @@ const mongoose = require('mongoose');
 const { env } = require('./env');
 
 async function startMemoryServer() {
+  if (process.env.VERCEL || env.nodeEnv === 'production') {
+    throw new Error('MONGO_URI is required. Use a MongoDB Atlas connection string on Vercel.');
+  }
+
   let MongoMemoryServer;
   try {
     ({ MongoMemoryServer } = require('mongodb-memory-server'));

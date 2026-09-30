@@ -68,16 +68,20 @@ function generateInvoicePdf(invoice, user) {
     doc.rect(0, 0, 8, doc.page.height).fill(INDIGO);
 
     let textX = 48;
-    if (user.logo && user.logo.startsWith('/uploads/')) {
-      const filePath = path.join(__dirname, '..', 'uploads', path.basename(user.logo));
-      if (fs.existsSync(filePath)) {
-        try {
+    try {
+      if (user.logo && user.logo.startsWith('data:image')) {
+        const base64 = user.logo.slice(user.logo.indexOf(',') + 1);
+        doc.image(Buffer.from(base64, 'base64'), 48, 42, { fit: [42, 42] });
+        textX = 102;
+      } else if (user.logo && user.logo.startsWith('/uploads/')) {
+        const filePath = path.join(__dirname, '..', 'uploads', path.basename(user.logo));
+        if (fs.existsSync(filePath)) {
           doc.image(filePath, 48, 42, { fit: [42, 42] });
           textX = 102;
-        } catch {
-          textX = 48;
         }
       }
+    } catch {
+      textX = 48;
     }
 
     const rightEdge = pageWidth - 48;

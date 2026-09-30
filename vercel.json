@@ -1,0 +1,15 @@
+{
+  "installCommand": "npm install && npm install --prefix server && npm install --prefix client",
+  "buildCommand": "npm run build --prefix client",
+  "outputDirectory": "client/dist",
+  "framework": null,
+  "rewrites": [
+    { "source": "/((?!api/).*)", "destination": "/index.html" }
+  ],
+  "functions": {
+    "api/[...path].js": {
+      "maxDuration": 30,
+      "includeFiles": "server/node_modules/pdfkit/js/data/**"
+    }
+  }
+}
