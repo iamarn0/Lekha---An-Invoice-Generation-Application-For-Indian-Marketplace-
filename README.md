@@ -127,7 +127,7 @@ The API serves `client/dist`. Use MongoDB Atlas or another hosted database, and 
 
 ## Deploy on Vercel
 
-The React app is the static site. The Express API runs as a Vercel function in `api/[...path].js`. Vercel has no local disk and no in-memory MongoDB, so production needs MongoDB Atlas.
+Import the repo as one Vercel project with the Services preset. Root directory stays `.`. Do not import `client` and `server` as two separate projects, or the login cookie will not be sent. `vercel.json` routes `/api` to the Express service and every other path to the Vite app. Vercel has no local disk and no in-memory MongoDB, so production needs MongoDB Atlas.
 
 1. In Atlas, create a free cluster and a database user. Allow network access from anywhere (`0.0.0.0/0`) so Vercel can connect.
 2. From the project root, install the CLI and deploy:
